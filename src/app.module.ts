@@ -14,6 +14,8 @@ import { Role } from './modules/role/entities/role.entity';
 import { RoleModule } from './modules/role/role.module';
 import { Position } from './modules/position/entities/position.entity';
 import { PositionModule } from './modules/position/position.module';
+import { Checkin } from './modules/checkin/entities/checkin.entity';
+import { CheckinModule } from './modules/checkin/checkin.module';
 
 @Module({
   imports: [
@@ -28,7 +30,7 @@ import { PositionModule } from './modules/position/position.module';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
-        entities: [Auth, Role,Position],
+        entities: [Auth, Role, Position, Checkin],
         synchronize: true,
         autoLoadEntities: true,
       }),
@@ -60,7 +62,8 @@ import { PositionModule } from './modules/position/position.module';
     }),
     AuthModule,
     RoleModule,
-    PositionModule
+    PositionModule,
+    CheckinModule,
   ],
   controllers: [AppController],
   providers: [
