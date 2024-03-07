@@ -62,7 +62,6 @@ export class CheckinService extends BaseAbstractRepostitory<Checkin> {
       }
 
       await this.authRepository.save(user);
-      // ... Previous code
     } else {
       // Case 2: Đã từng điểm danh
       const lastCheckinDate = user.lastCheckin;

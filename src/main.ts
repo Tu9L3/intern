@@ -5,6 +5,7 @@ import { configSwagger } from './config/api-doc.config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   configSwagger(app);
+  app.enableCors();
   await app.listen(3000);
 }
 bootstrap();
