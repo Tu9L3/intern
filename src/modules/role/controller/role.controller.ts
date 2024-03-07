@@ -17,7 +17,8 @@ import { AuthzGuard } from 'src/guards/authz/authz.guard';
 import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { Roles } from 'src/guards/authz/roles.decorator';
 import { RolesEnum } from 'src/enum';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('Role')
 @Controller('api/v1/role')
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}

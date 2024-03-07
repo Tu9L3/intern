@@ -24,12 +24,34 @@ import { PosEnum, RolesEnum } from 'src/enum';
 import { Roles } from 'src/guards/authz/roles.decorator';
 import { Positions } from 'src/guards/pos/pos.decorator';
 import { PosGuard } from 'src/guards/pos/pos.guard';
+import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Controller('api/v1/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
+  @ApiOperation({
+    summary: 'Create new user',
+  })
+  @ApiBody({
+    type: CreateAuthDto,
+    examples: {
+      user_1: {
+        value: {
+          email: 'b@example.com',
+          password: '1232@asdS',
+        } as CreateAuthDto,
+      },
+      user_2: {
+        value: {
+          email: 'a@example.com',
+          password: '1232@asdS',
+        } as CreateAuthDto,
+      },
+    },
+  })
   create(@Body() createAuthDto: CreateAuthDto) {
     return this.authService.createAcc(createAuthDto);
   }
@@ -62,7 +84,6 @@ export class AuthController {
     return this.authService.logOut(req);
   }
 
-  
   @UseGuards(AuthGuard)
   @Patch('update/:id')
   updateUser(@Param('id') id: number, @Body() updateUserDto: updateUserDto) {

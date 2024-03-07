@@ -17,7 +17,8 @@ import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { AuthzGuard } from 'src/guards/authz/authz.guard';
 import { Roles } from 'src/guards/authz/roles.decorator';
 import { RolesEnum } from 'src/enum';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('Position')
 @Controller('api/v1/position')
 export class PositionController {
   constructor(private readonly positionService: PositionService) {}
