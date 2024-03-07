@@ -16,6 +16,8 @@ import { Position } from './modules/position/entities/position.entity';
 import { PositionModule } from './modules/position/position.module';
 import { Checkin } from './modules/checkin/entities/checkin.entity';
 import { CheckinModule } from './modules/checkin/checkin.module';
+import { AllExceptionsFilter } from './filters/all-exception.filter';
+import { ResponseInterceptor } from './interceptors/response.interceptor';
 
 @Module({
   imports: [
@@ -70,11 +72,11 @@ import { CheckinModule } from './modules/checkin/checkin.module';
     AppService,
     {
       provide: APP_FILTER,
-      useClass: HttpExceptionFilter,
+      useClass: AllExceptionsFilter,
     },
     {
       provide: APP_INTERCEPTOR,
-      useClass: LoggingInterceptor,
+      useClass: ResponseInterceptor,
     },
   ],
 })

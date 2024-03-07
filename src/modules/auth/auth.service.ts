@@ -202,6 +202,8 @@ export class AuthService extends BaseAbstractRepostitory<Auth> {
     user.refreshToken = null;
 
     await this.save(user);
+
+    return {user}
   }
 
   async updateUser(updateUserDto: updateUserDto, id: number) {

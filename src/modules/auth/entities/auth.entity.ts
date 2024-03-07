@@ -12,7 +12,7 @@ export class Auth extends BaseDB {
   @Column()
   password: string;
 
-  @Column({ default: false })
+  @Column({ default: false, nullable: true })
   isVerify: boolean;
 
   @Column({ nullable: true })
