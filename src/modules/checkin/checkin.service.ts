@@ -62,6 +62,7 @@ export class CheckinService extends BaseAbstractRepostitory<Checkin> {
       }
 
       await this.authRepository.save(user);
+      // ... Previous code
     } else {
       // Case 2: Đã từng điểm danh
       const lastCheckinDate = user.lastCheckin;
@@ -70,12 +71,65 @@ export class CheckinService extends BaseAbstractRepostitory<Checkin> {
         lastCheckinDate.toDateString() === parsedDate.toDateString()
       ) {
         // Case 2.1: Hôm nay đã điểm danh
+        throw new Error('Already checked in today');
       } else {
         // Case 2.2: Hôm nay chưa điểm danh
         if (await this.isLastDayOfMonth(parsedDate)) {
           // Case 2.2.1: Hôm nay là cuối tháng
+          const lastMonthRewardsReceived =
+            user.lastGetCheckinRewards?.getMonth() ===
+            user.lastCheckin?.getMonth();
+
+          if (!lastMonthRewardsReceived) {
+            // Case 2.2.1.1: Tháng trước đó chưa nhận thưởng
+            const newCheckin = new Checkin();
+            newCheckin.checkDate = parsedDate;
+            newCheckin.eligibleForReward = true;
+            newCheckin.accessMount = 1;
+
+            await this.checkinRepository.save(newCheckin);
+
+            user.lastCheckin = parsedDate;
+            user.lastGetCheckinRewards = parsedDate;
+          } else {
+            // Case 2.2.1.2: Tháng trước đó đã nhận thưởng
+            const newCheckin = new Checkin();
+            newCheckin.checkDate = parsedDate;
+            newCheckin.eligibleForReward = true;
+            newCheckin.accessMount = 1;
+
+            await this.checkinRepository.save(newCheckin);
+
+            user.lastCheckin = parsedDate;
+          }
         } else {
           // Case 2.2.2: Hôm nay là ngày trong tháng
+          const lastMonthRewardsReceived =
+            user.lastGetCheckinRewards?.getMonth() ===
+            user.lastCheckin?.getMonth();
+
+          if (!lastMonthRewardsReceived) {
+            // Case 2.2.2.1: Tháng trước đó chưa nhận thưởng
+            const newCheckin = new Checkin();
+            newCheckin.checkDate = parsedDate;
+            newCheckin.eligibleForReward = true;
+            newCheckin.accessMount = 1;
+
+            await this.checkinRepository.save(newCheckin);
+
+            user.lastCheckin = parsedDate;
+            user.lastGetCheckinRewards = parsedDate;
+          } else {
+            // Case 2.2.2.2: Tháng trước đó đã nhận thưởng
+            const newCheckin = new Checkin();
+            newCheckin.checkDate = parsedDate;
+            newCheckin.eligibleForReward = false;
+            newCheckin.accessMount = 1;
+
+            await this.checkinRepository.save(newCheckin);
+
+            user.lastCheckin = parsedDate;
+          }
         }
       }
     }
