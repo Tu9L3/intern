@@ -44,21 +44,26 @@ export class AuthController {
     return this.authService.verify(verifyDto);
   }
 
+  @UseGuards(AuthGuard)
   @Post('refreshToken')
   refreshToken(@Body() refreshTokenDto: refreshTokenDto) {
     return this.authService.refreshToken(refreshTokenDto);
   }
 
+  @UseGuards(AuthGuard)
   @Post('forgotPassword')
   forgotPassword(@Body() forgotPassword: forgotPassword) {
     return this.authService.forgotPassword(forgotPassword);
   }
 
+  @UseGuards(AuthGuard)
   @Post('logOut')
   logOut(@Request() req: Request) {
     return this.authService.logOut(req);
   }
 
+  
+  @UseGuards(AuthGuard)
   @Patch('update/:id')
   updateUser(@Param('id') id: number, @Body() updateUserDto: updateUserDto) {
     return this.authService.updateUser(updateUserDto, id);

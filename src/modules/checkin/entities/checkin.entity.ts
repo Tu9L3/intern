@@ -1,5 +1,6 @@
 import { BaseDB } from 'src/common/base/base.db';
-import { Column, Entity } from 'typeorm';
+import { Auth } from 'src/modules/auth/entities/auth.entity';
+import { Column, Entity, ManyToOne } from 'typeorm';
 
 @Entity()
 export class Checkin extends BaseDB {
@@ -14,4 +15,7 @@ export class Checkin extends BaseDB {
 
   @Column({ nullable: true })
   rewardDaysCount: number;
+
+  @ManyToOne(() => Auth, (auth) => auth.dailyCheckin)
+  auth: Auth
 }

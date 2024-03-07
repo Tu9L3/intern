@@ -1,6 +1,10 @@
+import { IsNotEmpty } from 'class-validator';
+
 export class recoverPasswordDto {
-    newPassword: string;
-    email: string;
-    otp: string;
-  }
-  
+  @IsNotEmpty()
+  newPassword: string;
+  @IsNotEmpty()
+  email: string;
+  @IsNotEmpty()
+  otp: string;
+}

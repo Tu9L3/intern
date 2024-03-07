@@ -1,4 +1,8 @@
+import { IsNotEmpty } from 'class-validator';
+
 export class forgotPassword {
+  @IsNotEmpty()
   email: string;
-  recaptcha: string;
+  // @IsNotEmpty()
+  // recaptcha: string;
 }

@@ -2,7 +2,7 @@ import { BaseDB } from 'src/common/base/base.db';
 import { Checkin } from 'src/modules/checkin/entities/checkin.entity';
 import { Position } from 'src/modules/position/entities/position.entity';
 import { Role } from 'src/modules/role/entities/role.entity';
-import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 
 @Entity()
 export class Auth extends BaseDB {
@@ -32,8 +32,7 @@ export class Auth extends BaseDB {
   @JoinTable()
   positions: Position[];
 
-  @ManyToMany(() => Checkin, { cascade: true, eager: true })
-  @JoinTable()
+  @OneToMany(() => Checkin, (dailyCheckin) => dailyCheckin.auth)
   dailyCheckin: Checkin[];
 
   @Column({ nullable: true })

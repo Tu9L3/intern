@@ -8,12 +8,14 @@ import {
   Delete,
 } from '@nestjs/common';
 import { CheckinService } from '../checkin.service';
-import { CreateCheckinDto } from '../dto/create-checkin.dto';
-import { UpdateCheckinDto } from '../dto/update-checkin.dto';
+import { updateUserCheckinDto } from '../dto/updateUserCheckin.dto';
 
-@Controller('checkin')
+@Controller('api/v1/checkin')
 export class CheckinController {
   constructor(private readonly checkinService: CheckinService) {}
 
-  
+  @Post('update')
+  updateUserCheckin(@Body() updateUserCheckinDto: updateUserCheckinDto) {
+    return this.checkinService.updateUserCheckin(updateUserCheckinDto);
+  }
 }

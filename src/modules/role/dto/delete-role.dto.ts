@@ -1,4 +1,6 @@
+import { IsNotEmpty } from 'class-validator';
+
 export class DeleteRoleDto {
-    roleId: number;
-  }
-  
+  @IsNotEmpty()
+  roleId: number;
+}

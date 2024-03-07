@@ -1,3 +1,6 @@
+import { IsNotEmpty } from 'class-validator';
+
 export class CreatePositionDto {
-    name: string;
+  @IsNotEmpty()
+  name: string;
 }
