@@ -70,10 +70,10 @@ import { ResponseInterceptor } from './interceptors/response.interceptor';
   controllers: [AppController],
   providers: [
     AppService,
-    {
-      provide: APP_FILTER,
-      useClass: AllExceptionsFilter,
-    },
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: HttpExceptionFilter,
+    // },
     {
       provide: APP_INTERCEPTOR,
       useClass: ResponseInterceptor,

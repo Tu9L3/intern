@@ -118,17 +118,25 @@ export class AuthService extends BaseAbstractRepostitory<Auth> {
 
     return { accessToken, refreshToken, user };
   }
-
   async verify(verifyDto: verifyDto) {
-    const user = await this.findByColumn('email', verifyDto.email);
+    try {
+      const user = await this.findByColumn('email', verifyDto.email);
 
-    if (user.otp !== verifyDto.otp) {
-      return 'OTP is not valid';
+      if (!user) {
+        throw new BadRequestException('User not found');
+      }
+
+      if (user.otp !== verifyDto.otp) {
+        throw new BadRequestException('Invalid OTP');
+      }
+
+      user.otp = null;
+      user.isVerify = true;
+
+      await this.save(user);
+    } catch (error) {
+      throw new BadRequestException(error.message);
     }
-
-    user.otp = null;
-
-    await this.save(user);
   }
 
   async refreshToken(refreshToken: refreshTokenDto) {
@@ -203,7 +211,7 @@ export class AuthService extends BaseAbstractRepostitory<Auth> {
 
     await this.save(user);
 
-    return {user}
+    return { user };
   }
 
   async updateUser(updateUserDto: updateUserDto, id: number) {
