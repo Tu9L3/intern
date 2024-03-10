@@ -26,15 +26,15 @@ export class AuthService extends BaseAbstractRepostitory<Auth> {
     @InjectRepository(Auth)
     private authRepositoty: Repository<Auth>,
     private readonly jwtService: JwtService,
-    private readonly mailerService: MailerService,
+    // private readonly mailerService: MailerService,
     private configService: ConfigService,
     @Inject(CACHE_MANAGER) private cacheManager: CacheStore,
   ) {
     super(authRepositoty);
   }
 
-  async getCache(){
-    return await this.cacheManager.get('refreshToken')
+  async getCache() {
+    return await this.cacheManager.get('refreshToken');
   }
 
   async createAcc(createAuthDto: CreateAuthDto) {
@@ -49,7 +49,7 @@ export class AuthService extends BaseAbstractRepostitory<Auth> {
     });
 
     const otp = this.generateOtp();
-    await this.sendOtpEmail({ email: createAuthDto.email, otp: otp });
+    // await this.sendOtpEmail({ email: createAuthDto.email, otp: otp });
 
     user.otp = otp;
 
@@ -58,38 +58,38 @@ export class AuthService extends BaseAbstractRepostitory<Auth> {
     return user;
   }
 
-  async sendOtpEmail(sendOtp: sendOtpDto) {
-    const otp = sendOtp.otp;
-    const email = sendOtp.email;
-    await this.mailerService.sendMail({
-      to: sendOtp.email,
-      subject: 'Verification Code',
-      template: 'welcome',
-      context: { email, otp },
-    });
-  }
+  // async sendOtpEmail(sendOtp: sendOtpDto) {
+  //   const otp = sendOtp.otp;
+  //   const email = sendOtp.email;
+  //   await this.mailerService.sendMail({
+  //     to: sendOtp.email,
+  //     subject: 'Verification Code',
+  //     template: 'welcome',
+  //     context: { email, otp },
+  //   });
+  // }
 
-  async sendOtpForgotPass(sendOtp: sendOtpDto) {
-    const otp = sendOtp.otp;
-    const email = sendOtp.email;
-    await this.mailerService.sendMail({
-      to: sendOtp.email,
-      subject: 'Forgot password code',
-      template: 'forgotpass',
-      context: { email, otp },
-    });
-  }
+  // async sendOtpForgotPass(sendOtp: sendOtpDto) {
+  //   const otp = sendOtp.otp;
+  //   const email = sendOtp.email;
+  //   await this.mailerService.sendMail({
+  //     to: sendOtp.email,
+  //     subject: 'Forgot password code',
+  //     template: 'forgotpass',
+  //     context: { email, otp },
+  //   });
+  // }
 
-  async sendOtpChangePass(sendOtp: sendOtpDto) {
-    const otp = sendOtp.otp;
-    const email = sendOtp.email;
-    await this.mailerService.sendMail({
-      to: sendOtp.email,
-      subject: 'Change password code',
-      template: 'changepass',
-      context: { email, otp },
-    });
-  }
+  // async sendOtpChangePass(sendOtp: sendOtpDto) {
+  //   const otp = sendOtp.otp;
+  //   const email = sendOtp.email;
+  //   await this.mailerService.sendMail({
+  //     to: sendOtp.email,
+  //     subject: 'Change password code',
+  //     template: 'changepass',
+  //     context: { email, otp },
+  //   });
+  // }
 
   async login(loginDto: loginDto) {
     const user = await this.findByColumn('email', loginDto.email);
@@ -118,8 +118,8 @@ export class AuthService extends BaseAbstractRepostitory<Auth> {
       expiresIn: '7d',
     });
 
-    await this.cacheManager.set('refreshToken', refreshToken,{
-      ttl: 7 * 24 * 60 * 60 * 1000
+    await this.cacheManager.set('refreshToken', refreshToken, {
+      ttl: 7 * 24 * 60 * 60 * 1000,
     });
 
     await this.authRepositoty.save(user);
@@ -174,7 +174,7 @@ export class AuthService extends BaseAbstractRepostitory<Auth> {
 
     user.otp = otp;
     await this.save(user);
-    await this.sendOtpForgotPass({ email: forgotPasswordDto.email, otp: otp });
+    // await this.sendOtpForgotPass({ email: forgotPasswordDto.email, otp: otp });
   }
 
   async recoverPassword(recoverPassword: recoverPasswordDto) {
@@ -298,5 +298,10 @@ export class AuthService extends BaseAbstractRepostitory<Auth> {
 
   private generateOtp(): string {
     return Math.floor(1000 + Math.random() * 9000).toString();
+  }
+
+  async findAllUser() {
+    const users = await this.authRepositoty.find();
+    return users;
   }
 }

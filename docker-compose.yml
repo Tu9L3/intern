@@ -1,29 +1,30 @@
-version: '3.8'
-
+version: "3.8"
 services:
-  app:
-    image: node:18-alpine
-    command: sh -c "yarn install && yarn run start:dev"
+  nestapp:
+    container_name: nestapp
+    image: tu9l3/nestapp:1.0.0
+    build: .
     ports:
       - 3000:3000
-    working_dir: /app
-    volumes:
-      - ./:/app
     environment:
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: 5432
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: demo
-
-  postgres:
-    image: postgres:13
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - DB_TYPE=postgres
+      - DB_HOST=db
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+      - DB_DATABASE=postgres
+      - DB_PORT=5432
+    depends_on:
+      - db
+  db:
+    container_name: db
+    image: postgres:12
+    ports:
+      - 5432:5432
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: demo
-
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
 volumes:
-  postgres-data:
+  pgdata: {}

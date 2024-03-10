@@ -66,6 +66,11 @@ export class AuthController {
     return this.authService.getCache()
   }
 
+  @Get('findAllUser')
+  findAllUser(){
+    return this.authService.findAllUser()
+  }
+
   @Post('verify')
   verify(@Body() verifyDto: verifyDto) {
     return this.authService.verify(verifyDto);
