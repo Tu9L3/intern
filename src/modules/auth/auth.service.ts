@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Auth } from './entities/auth.entity';
@@ -17,6 +17,7 @@ import { recoverPasswordDto } from './dto/recoveryPassword.dto';
 import { changePasswordDto } from './dto/changePassword.dto';
 import { updateUserDto } from './dto/updateUser.dto';
 import { dateDto } from './dto/date.dto';
+import { CACHE_MANAGER, CacheStore } from '@nestjs/cache-manager';
 const saltOrRounds = 10;
 
 @Injectable()
@@ -27,6 +28,7 @@ export class AuthService extends BaseAbstractRepostitory<Auth> {
     private readonly jwtService: JwtService,
     private readonly mailerService: MailerService,
     private configService: ConfigService,
+    @Inject(CACHE_MANAGER) private cacheManager: CacheStore,
   ) {
     super(authRepositoty);
   }
@@ -112,7 +114,7 @@ export class AuthService extends BaseAbstractRepostitory<Auth> {
       expiresIn: '7d',
     });
 
-    user.refreshToken = refreshToken;
+    await this.cacheManager.set('refreshToken', refreshToken);
 
     await this.authRepositoty.save(user);
 
@@ -139,9 +141,10 @@ export class AuthService extends BaseAbstractRepostitory<Auth> {
     }
   }
 
-  async refreshToken(refreshToken: refreshTokenDto) {
-    const decode = this.jwtService.verify(refreshToken.refreshToken, {
-      secret: this.configService.get('ACCESS_KEY'),
+  async refreshToken() {
+    const refreshToken: string = await this.cacheManager.get('refreshToken');
+    const decode = this.jwtService.verify(refreshToken, {
+      secret: this.configService.get('REFRESH_KEY'),
     });
 
     const user = await this.findOneById(decode.id);
@@ -207,7 +210,7 @@ export class AuthService extends BaseAbstractRepostitory<Auth> {
 
   async logOut(req: Request) {
     const user = await this.findOneById(req['user'].id);
-    user.refreshToken = null;
+    await this.cacheManager.del('refreshToken');
 
     await this.save(user);
 
@@ -233,15 +236,8 @@ export class AuthService extends BaseAbstractRepostitory<Auth> {
         .getMany();
 
       const userInfo = users.map(
-        ({
-          password,
-          isVerify,
-          refreshToken,
-          createdAt,
-          updatedAt,
-          otp,
-          ...userInfo
-        }) => userInfo,
+        ({ password, isVerify, createdAt, updatedAt, otp, ...userInfo }) =>
+          userInfo,
       );
 
       return userInfo;
@@ -257,15 +253,8 @@ export class AuthService extends BaseAbstractRepostitory<Auth> {
       .getMany();
 
     const userInfo = users.map(
-      ({
-        password,
-        isVerify,
-        refreshToken,
-        createdAt,
-        updatedAt,
-        otp,
-        ...userInfo
-      }) => userInfo,
+      ({ password, isVerify, createdAt, updatedAt, otp, ...userInfo }) =>
+        userInfo,
     );
 
     return userInfo;
@@ -278,15 +267,8 @@ export class AuthService extends BaseAbstractRepostitory<Auth> {
       .getMany();
 
     const userInfo = users.map(
-      ({
-        password,
-        isVerify,
-        refreshToken,
-        createdAt,
-        updatedAt,
-        otp,
-        ...userInfo
-      }) => userInfo,
+      ({ password, isVerify, createdAt, updatedAt, otp, ...userInfo }) =>
+        userInfo,
     );
 
     return userInfo;
@@ -301,15 +283,8 @@ export class AuthService extends BaseAbstractRepostitory<Auth> {
     });
 
     const userInfo = users.map(
-      ({
-        password,
-        isVerify,
-        refreshToken,
-        createdAt,
-        updatedAt,
-        otp,
-        ...userInfo
-      }) => userInfo,
+      ({ password, isVerify, createdAt, updatedAt, otp, ...userInfo }) =>
+        userInfo,
     );
 
     return userInfo;

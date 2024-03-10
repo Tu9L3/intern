@@ -18,9 +18,6 @@ export class Auth extends BaseDB {
   @Column({ nullable: true })
   otp: string;
 
-  @Column({ nullable: true })
-  refreshToken: string;
-
   @Column('date', { nullable: true })
   birthday: Date;
 

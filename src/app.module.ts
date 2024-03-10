@@ -18,6 +18,7 @@ import { Checkin } from './modules/checkin/entities/checkin.entity';
 import { CheckinModule } from './modules/checkin/checkin.module';
 import { AllExceptionsFilter } from './filters/all-exception.filter';
 import { ResponseInterceptor } from './interceptors/response.interceptor';
+import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -66,6 +67,7 @@ import { ResponseInterceptor } from './interceptors/response.interceptor';
     RoleModule,
     PositionModule,
     CheckinModule,
+
   ],
   controllers: [AppController],
   providers: [
