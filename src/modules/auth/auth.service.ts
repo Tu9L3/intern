@@ -114,7 +114,9 @@ export class AuthService extends BaseAbstractRepostitory<Auth> {
       expiresIn: '7d',
     });
 
-    await this.cacheManager.set('refreshToken', refreshToken);
+    await this.cacheManager.set('refreshToken', refreshToken,{
+      ttl: 7 * 24 * 60 * 60 * 1000
+    });
 
     await this.authRepositoty.save(user);
 
