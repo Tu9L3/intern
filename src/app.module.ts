@@ -63,11 +63,14 @@ import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
         },
       }),
     }),
+
     AuthModule,
     RoleModule,
     PositionModule,
     CheckinModule,
-
+    CacheModule.register({
+      isGlobal: true,
+    }),
   ],
   controllers: [AppController],
   providers: [
@@ -76,6 +79,10 @@ import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
     //   provide: APP_FILTER,
     //   useClass: HttpExceptionFilter,
     // },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheInterceptor,
+    },
     {
       provide: APP_INTERCEPTOR,
       useClass: ResponseInterceptor,

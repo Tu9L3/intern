@@ -7,7 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Auth]), JwtModule,CacheModule.register()],
+  imports: [TypeOrmModule.forFeature([Auth]), JwtModule],
   controllers: [AuthController],
   providers: [AuthService],
 })

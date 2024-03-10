@@ -33,6 +33,10 @@ export class AuthService extends BaseAbstractRepostitory<Auth> {
     super(authRepositoty);
   }
 
+  async getCache(){
+    return await this.cacheManager.get('refreshToken')
+  }
+
   async createAcc(createAuthDto: CreateAuthDto) {
     const hassPassword = await bcrypt.hash(
       createAuthDto.password,
